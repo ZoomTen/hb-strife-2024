@@ -2,7 +2,7 @@
 
 version       = "0.1.0"
 author        = "Zumi + TarnishedFables"
-description   = "Strife 3.0"
+description   = "Strife 2024"
 license       = "MIT"
 srcDir        = "src"
 bin           = @["strife"]
