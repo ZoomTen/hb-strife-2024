@@ -14,8 +14,8 @@ const
 
   ## Size of the actual OS window
   init_window_size = (
-    width: game_canvas_size.width.float * 1.5,
-    height: game_canvas_size.height.float * 1.5,
+    width: game_canvas_size.width.float * 2,
+    height: game_canvas_size.height.float * 2,
   )
 
   ## How often to run the "garbage collector"
@@ -50,7 +50,7 @@ proc main(): Result[void, string] {.raises: [].} =
     gsr.canvas = rl.load_render_texture(
       game_canvas_size.width.int32, game_canvas_size.height.int32
     )
-    rl.set_texture_filter(gsr.canvas.texture, rl.Trilinear)
+    rl.set_texture_filter(gsr.canvas.texture, rl.Point)
   except rl.RaylibError:
     return err("can't initialize game canvas")
 
