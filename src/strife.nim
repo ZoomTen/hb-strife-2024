@@ -10,11 +10,13 @@ import ./indices
 
 const
   ## Size of the "fantasy console"
-  game_canvas_size = (width: 500'i32, height: 400'i32)
+  game_canvas_size = (width: 500, height: 400)
 
   ## Size of the actual OS window
-  init_window_size =
-    (width: game_canvas_size.width * 2, height: game_canvas_size.height * 2)
+  init_window_size = (
+    width: game_canvas_size.width.float * 1.5,
+    height: game_canvas_size.height.float * 1.5,
+  )
 
   ## How often to run the "garbage collector"
   my_gc_interval = 30
@@ -33,8 +35,10 @@ proc main(): Result[void, string] {.raises: [].} =
 
   ## Initialize the OS window
   try:
-    rl.init_window(init_window_size.width, init_window_size.height, "HB: Strife 2024")
-    rl.set_window_min_size(game_canvas_size.width, game_canvas_size.height)
+    rl.init_window(
+      init_window_size.width.int32, init_window_size.height.int32, "HB: Strife 2024"
+    )
+    rl.set_window_min_size(game_canvas_size.width.int32, game_canvas_size.height.int32)
     rl.set_window_state(rl.flags(rl.VsyncHint, rl.WindowResizable))
   except rl.RaylibError:
     return err("can't initialize window")
@@ -43,7 +47,10 @@ proc main(): Result[void, string] {.raises: [].} =
 
   ## Initialize the game canvas
   try:
-    gsr.canvas = rl.load_render_texture(game_canvas_size.width, game_canvas_size.height)
+    gsr.canvas = rl.load_render_texture(
+      game_canvas_size.width.int32, game_canvas_size.height.int32
+    )
+    rl.set_texture_filter(gsr.canvas.texture, rl.Trilinear)
   except rl.RaylibError:
     return err("can't initialize game canvas")
 
