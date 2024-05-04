@@ -12,9 +12,9 @@ proc pick_random_enemy_state*(): EnemyAiState =
     seconds: (
       case random_movement
       of Jump, Shoot:
-        0.1
+        0.05
       else:
-        rand(0.05 .. 0.1)
+        rand(0.02 .. 0.08)
     ),
   )
 
