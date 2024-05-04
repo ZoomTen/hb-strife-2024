@@ -247,7 +247,7 @@ proc main(): Result[void, string] {.raises: [].} =
         0.0,
         rl.White,
       )
-      rl.draw_rectangle(0, 0, 110, 20, rl.Black)
+      rl.draw_rectangle(0, 0, 90, 20, rl.Black)
       rl.draw_fps(0, 0)
   ## Done
   return ok()
