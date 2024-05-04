@@ -32,6 +32,7 @@ type
     case kind*: ObjectKind
     of Player, Enemy:
       xkickback*: float = 0.0
+      attack_anim_timeout*: float = 0.0
       flinch_timeout*: float = 0.0
       shoot_timeout*: float = 0.0
       hp* = 20

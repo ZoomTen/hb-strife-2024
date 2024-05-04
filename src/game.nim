@@ -103,6 +103,11 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
     else:
       obj.flinch_timeout -= state.delta
 
+    if obj.attack_anim_timeout <= 0:
+      obj.attack_anim_timeout = 0
+    else:
+      obj.attack_anim_timeout -= state.delta
+
     ## Add some cooldown time between shots
     if obj.shoot_timeout <= 0:
       obj.shoot_timeout = 0
@@ -211,6 +216,8 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
         obj.enemy_already_shot_or_jump = true
       ## Init newly-created bullet
       state.objects[^1].init(state)
+      ## Do attack animation
+      obj.attack_anim_timeout = 0.28
 
     ## Run the AI
     if obj.kind == Enemy:
@@ -329,6 +336,8 @@ func draw*(obj: GameObjectRef, state: var GameStateRef): void =
     of Player:
       if obj.flinch_timeout > 0:
         state.textures[HariaFlinch.ord]
+      elif obj.attack_anim_timeout > 0:
+        state.textures[HariaAttack.ord]
       else:
         state.textures[HariakimaSheet.ord]
     of Enemy:
@@ -437,6 +446,7 @@ proc uninit*(obj: GameObjectRef, state: var GameStateRef): void =
       of Player, Enemy:
         obj.hit_who.xkickback = 100.0
         obj.hit_who.flinch_timeout = 0.4
+        obj.hit_who.attack_anim_timeout = 0.0
         obj.hit_who.hp -= 1
         if obj.hit_who.hp == 0:
           obj.hit_who.deletion_pending = true

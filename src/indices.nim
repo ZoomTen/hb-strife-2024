@@ -16,3 +16,4 @@ type
     DonutGuyFlinch
     DonutGuyDead
     HariaDead
+    HariaAttack

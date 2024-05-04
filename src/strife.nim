@@ -131,6 +131,10 @@ proc main(): Result[void, string] {.raises: [].} =
         gsr.textures.add(
           rl.load_texture_from_image(rl.load_image("res/spr_donut_guy_ded.png"))
         )
+      of HariaAttack:
+        gsr.textures.add(
+          rl.load_texture_from_image(rl.load_image("res/spr_hariakima_attack.png"))
+        )
     except rl.RaylibError as e:
       log.error("Cannot load texture", msg = e.msg)
       gsr.textures.add(rl.Texture())
