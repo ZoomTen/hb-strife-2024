@@ -35,7 +35,7 @@ type
       attack_anim_timeout*: float = 0.0
       flinch_timeout*: float = 0.0
       shoot_timeout*: float = 0.0
-      hp* = 20
+      hp* = 100
     of LmaoDed:
       original_guy*: ObjectKind
     of Bullet:
