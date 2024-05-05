@@ -471,7 +471,8 @@ proc uninit*(obj: GameObjectRef, state: var GameStateRef): void =
   case obj.kind
   of Bullet:
     if obj.hit_who != nil:
-      state.shake = 10
+      if obj.hit_who.kind == Player:
+        state.shake = 10
       case obj.hit_who.kind
       of Player, Enemy:
         obj.hit_who.xkickback = 100.0
