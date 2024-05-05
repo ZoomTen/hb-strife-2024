@@ -51,9 +51,9 @@ proc main(): Result[void, string] {.raises: [].} =
     rl.set_window_min_size(game_canvas_size.width.int32, game_canvas_size.height.int32)
     rl.set_window_state(
       when defined(emscripten):
-        rl.flags(rl.VsyncHint)
+        rl.flags(rl.VsyncHint, rl.WindowAlwaysRun)
       else:
-        rl.flags(rl.VsyncHint, rl.WindowResizable)
+        rl.flags(rl.VsyncHint, rl.WindowResizable, rl.WindowAlwaysRun)
     )
   except rl.RaylibError:
     return err("can't initialize window")
