@@ -136,7 +136,14 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
       if obj.pos.y == floor_height:
         case obj.kind
         of Player:
-          if rl.is_key_pressed(rl.Up):
+          if (
+            ## Keyboard
+            rl.is_key_pressed(rl.Up) or (
+              ## Gamepad
+              rl.is_gamepad_available(0) and
+              rl.get_gamepad_button_pressed() == rl.RightTrigger1
+            )
+          ):
             obj.ymom = jump_momentum
             on_ground = false
             ## Jump!
@@ -163,10 +170,27 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
     obj.pos.x += (
       case obj.kind
       of Player:
-        if rl.is_key_down(rl.Left) and obj.pos.x >= 10.0:
+        if (
+          ## Keyboard
+          rl.is_key_down(rl.Left) or (
+            ## Gamepad
+            rl.is_gamepad_available(0) and (
+              rl.get_gamepad_axis_movement(0, rl.LeftX) <= -0.5 or
+              rl.get_gamepad_button_pressed() == rl.LeftFaceLeft
+            )
+          )
+        ) and obj.pos.x >= 10.0:
           -move_speed * state.delta
-        elif rl.is_key_down(rl.Right) and
-            obj.pos.x <= (state.canvas.texture.width / 2) - 80.0:
+        elif (
+          ## Keyboard
+          rl.is_key_down(rl.Right) or (
+            ## Gamepad
+            rl.is_gamepad_available(0) and (
+              rl.get_gamepad_axis_movement(0, rl.LeftX) >= 0.5 or
+              rl.get_gamepad_button_pressed() == rl.LeftFaceRight
+            )
+          )
+        ) and obj.pos.x <= (state.canvas.texture.width / 2) - 80.0:
           move_speed * state.delta
         else:
           0.0
@@ -185,8 +209,14 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
 
     ## Shoot something
     if (
-      obj.kind == Player and rl.is_key_pressed(rl.KeyboardKey.Z) and
-      obj.shoot_timeout == 0
+      obj.kind == Player and (
+        ## Keyboard
+        rl.is_key_pressed(rl.KeyboardKey.Z) or (
+          ## Gamepad
+          rl.is_gamepad_available(0) and
+          rl.get_gamepad_button_pressed() == rl.RightFaceRight
+        )
+      ) and obj.shoot_timeout == 0
     ) or (
       obj.kind == Enemy and obj.ai_state.state == Shoot and
       not obj.enemy_already_shot_or_jump and obj.shoot_timeout == 0
