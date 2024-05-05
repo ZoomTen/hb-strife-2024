@@ -204,17 +204,18 @@ proc main(fps: int): Result[void, string] {.raises: [].} =
     block:
       for objnum in 0 ..< len(gsr.objects):
         var obj = gsr.objects[objnum]
-        if obj != nil:
+        if obj == nil:
+          continue
+        try:
+          obj.update(gsr)
+        except Exception as e:
+          log.error("Error updating object", msg = e.msg)
+        if obj.deletion_pending:
           try:
-            obj.update(gsr)
+            obj.uninit(gsr)
+            gsr.objects[objnum] = nil
           except Exception as e:
-            log.error("Error updating object", msg = e.msg)
-          if obj.deletion_pending:
-            try:
-              obj.uninit(gsr)
-              gsr.objects[objnum] = nil
-            except Exception as e:
-              log.error("Error deleting object", msg = e.msg)
+            log.error("Error deleting object", msg = e.msg)
 
     ## Do screen shakey effects
     block:
@@ -236,11 +237,12 @@ proc main(fps: int): Result[void, string] {.raises: [].} =
           log.error("Error drawing BG", msg = e.msg)
         ## And then the objects on top
         for obj in gsr.objects:
-          if obj != nil:
-            try:
-              obj.draw(gsr)
-            except Exception as e:
-              log.error("Error drawing object", msg = e.msg)
+          if obj == nil:
+            continue
+          try:
+            obj.draw(gsr)
+          except Exception as e:
+            log.error("Error drawing object", msg = e.msg)
 
     ## Draw scaled canvas to the main screen
     rl.drawing:

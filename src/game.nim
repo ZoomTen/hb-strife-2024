@@ -117,13 +117,14 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
     ## Check if the other guy exists
     var opponent_exists = false
     for i in state.objects:
-      if i != nil:
-        if obj.kind == Enemy and i.kind == Player:
-          opponent_exists = true
-          break
-        elif obj.kind == Player and i.kind == Enemy:
-          opponent_exists = true
-          break
+      if i == nil:
+        continue
+      if obj.kind == Enemy and i.kind == Player:
+        opponent_exists = true
+        break
+      elif obj.kind == Player and i.kind == Enemy:
+        opponent_exists = true
+        break
 
     ## Player or Enemy cannot move when the game is in the
     ## intro phase, they're flinching, or if the opponent doesn't exist anymore
