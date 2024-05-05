@@ -8,6 +8,7 @@ import ./utils
 import ./game
 import ./indices
 import docopt
+import std/strutils
 
 const
   ## Size of the "fantasy console"
@@ -30,7 +31,7 @@ const
   my_gc_interval = 30
 
 ## Main program
-proc main(): Result[void, string] {.raises: [].} =
+proc main(fps: int): Result[void, string] {.raises: [].} =
   var
     music: rl.Music
     music_is_init: bool = false
@@ -161,7 +162,8 @@ proc main(): Result[void, string] {.raises: [].} =
     except Exception as e:
       log.error("Cannot init object", msg = e.msg)
 
-  # rl.set_target_fps(60)
+  if fps >= 24:
+    rl.set_target_fps(fps.int32)
 
   while not rl.window_should_close():
     ## A custom object garbage collecting routine. Yes. On top of Nim's existing garbage
@@ -281,12 +283,16 @@ Usage:
   strife --version
 
 If target FPS is not set, the game will run according
-to your monitor's refresh rate
+to your monitor's refresh rate. Minimum FPS is 30.
 """.docopt(
     version = "HB: Strife! 3.0"
   )
-  log.info("Target FPS set?", fps = args["<fps>"])
-  let main_result = main()
+  let main_result = main(
+    try:
+      parse_int($args["--fps"])
+    except Exception:
+      0
+  )
   if main_result.is_ok():
     quit(0)
   else:
