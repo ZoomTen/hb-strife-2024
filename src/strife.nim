@@ -7,6 +7,7 @@ import ./types
 import ./utils
 import ./game
 import ./indices
+import docopt
 
 const
   ## Size of the "fantasy console"
@@ -253,6 +254,24 @@ proc main(): Result[void, string] {.raises: [].} =
   return ok()
 
 when is_main_module:
+  let args = """
+Hariakima Buchmesse: Strife! 2024 version
+
+Programmed by Zumi
+Remake of TarnishedFables's 2014 & 2015 versions
+Funny Homestuck
+
+Usage:
+  strife [--fps=<fps>]
+  strife (-h | --help)
+  strife --version
+
+If target FPS is not set, the game will run according
+to your monitor's refresh rate
+""".docopt(
+    version = "HB: Strife! 3.0"
+  )
+  log.info("Target FPS set?", fps = args["<fps>"])
   let main_result = main()
   if main_result.is_ok():
     quit(0)
