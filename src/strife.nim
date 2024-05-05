@@ -14,10 +14,17 @@ const
   game_canvas_size = (width: 500, height: 400)
 
   ## Size of the actual OS window
-  init_window_size = (
-    width: game_canvas_size.width.float * 2,
-    height: game_canvas_size.height.float * 2,
-  )
+  init_window_size =
+    when defined(emscripten):
+      (
+        width: game_canvas_size.width.float * 1,
+        height: game_canvas_size.height.float * 1,
+      )
+    else:
+      (
+        width: game_canvas_size.width.float * 2,
+        height: game_canvas_size.height.float * 2,
+      )
 
   ## How often to run the "garbage collector"
   my_gc_interval = 30
@@ -32,7 +39,9 @@ proc main(): Result[void, string] {.raises: [].} =
     last_sec = 0
 
   randomize()
-  rl.set_trace_log_callback(my_log)
+
+  when not defined(emscripten):
+    rl.set_trace_log_callback(my_log)
 
   ## Initialize the OS window
   try:
@@ -40,7 +49,12 @@ proc main(): Result[void, string] {.raises: [].} =
       init_window_size.width.int32, init_window_size.height.int32, "HB: Strife 2024"
     )
     rl.set_window_min_size(game_canvas_size.width.int32, game_canvas_size.height.int32)
-    rl.set_window_state(rl.flags(rl.VsyncHint, rl.WindowResizable))
+    rl.set_window_state(
+      when defined(emscripten):
+        rl.flags(rl.VsyncHint)
+      else:
+        rl.flags(rl.VsyncHint, rl.WindowResizable)
+    )
   except rl.RaylibError:
     return err("can't initialize window")
   defer:
