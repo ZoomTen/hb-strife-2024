@@ -360,7 +360,7 @@ proc update*(obj: GameObjectRef, state: var GameStateRef): void =
       obj.ymom = 0.0
       on_ground = true
 
-func draw*(obj: GameObjectRef, state: var GameStateRef): void =
+proc draw*(obj: GameObjectRef, state: var GameStateRef): void =
   let texture = (
     case obj.kind
     of Player:
@@ -426,6 +426,11 @@ func draw*(obj: GameObjectRef, state: var GameStateRef): void =
         obj.pos.x.int32 - texture.width
       of Center:
         obj.pos.x.int32 - (texture.width / 2).int32
+    ) + (
+      if obj.kind in [Player, Enemy] and obj.flinch_timeout > 0.0:
+        rand(-4 .. 4).int32
+      else:
+        0
     ),
     (
       case obj.anchor
@@ -435,6 +440,11 @@ func draw*(obj: GameObjectRef, state: var GameStateRef): void =
         obj.pos.y.int32
       of Center:
         obj.pos.y.int32 - (texture.height / 2).int32
+    ) + (
+      if obj.kind in [Player, Enemy] and obj.flinch_timeout > 0.0:
+        rand(-4 .. 4).int32
+      else:
+        0
     ),
     rl.White,
   )
