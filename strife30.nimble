@@ -77,12 +77,15 @@ task apk, "Build an Android application":
     of I386: "i386"
     of Amd64: "amd64"
   
+  let
+    targetCPUs = [Arm64]
+  
   # --- Start of Build Script ---
   # See also config.nims
 
   # 1. Compile the Everything™
   #    for Every Possible Target™
-  for target in AndroidArch:
+  for target in targetCPUs:
     selfExec([
       "c",
       "-d:android",
@@ -157,7 +160,7 @@ task apk, "Build an Android application":
   #    Done in `android` to make the path `./lib/arm…`
   #    and not `./android/lib/arm…`
   withDir("android"):
-    for target in AndroidArch:
+    for target in targetCPUs:
       exec([
         bTools & "/aapt",
         "add",
