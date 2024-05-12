@@ -18,11 +18,34 @@ proc pick_random_enemy_state*(): EnemyAiState =
     ),
   )
 
+proc contains(rect: rl.Rectangle, pos: rl.Vector2): bool =
+  return (
+    (pos.x >= rect.x) and (pos.x < (rect.x + rect.width)) and (pos.y >= rect.y) and
+    (pos.y < (rect.y + rect.height))
+  )
+
 proc getControl(which: static ControlIndex): bool =
   let hasGamePad = rl.is_gamepad_available(0)
+  when defined(mobileUI):
+    let touchPos = (
+      let tpCount = rl.get_touch_point_count()
+      case tpCount
+      of 0: rl.Vector2(x: -1, y: -1)
+      of 1: rl.get_touch_position(0)
+      of 2: rl.get_touch_position(1)
+      else:
+        rl.Vector2(x: -1, y: -1)
+    )
   case which
   of MovePlayerLeft:
     return (
+      (
+        ## Mobile
+        when defined(mobileUI):
+          rl.is_gesture_detected(rl.Drag) and rl.get_gesture_drag_vector().x < 0
+        else:
+          false
+      ) or
       ## Keyboard
       rl.is_key_down(rl.Left) or (
         ## Gamepad
@@ -34,6 +57,13 @@ proc getControl(which: static ControlIndex): bool =
     )
   of MovePlayerRight:
     return (
+      (
+        ## Mobile
+        when defined(mobileUI):
+          rl.is_gesture_detected(rl.Drag) and rl.get_gesture_drag_vector().x > 0
+        else:
+          false
+      ) or
       ## Keyboard
       rl.is_key_down(rl.Right) or (
         ## Gamepad
@@ -45,6 +75,18 @@ proc getControl(which: static ControlIndex): bool =
     )
   of PlayerJump:
     return (
+      (
+        ## Mobile
+        when defined(mobileUI):
+        touchPos in
+          rl.Rectangle(
+            x: rl.get_screen_width().float32 - 250,
+            y: rl.get_screen_height().float32 - 500,
+            width: 250,
+            height: 250,
+          )
+        else: false
+      ) or
       ## Keyboard
       rl.is_key_pressed(rl.Up) or (
         ## Gamepad
@@ -53,6 +95,18 @@ proc getControl(which: static ControlIndex): bool =
     )
   of PlayerShoot:
     return (
+      (
+        ## Mobile
+        when defined(mobileUI):
+        touchPos in
+          rl.Rectangle(
+            x: rl.get_screen_width().float32 - 250,
+            y: rl.get_screen_height().float32 - 250,
+            width: 250,
+            height: 250,
+          )
+        else: false
+      ) or
       ## Keyboard
       rl.is_key_pressed(rl.KeyboardKey.Z) or (
         ## Gamepad

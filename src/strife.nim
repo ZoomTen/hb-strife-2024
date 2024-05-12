@@ -23,7 +23,7 @@ const
       )
     elif defined(mobileUI):
       (
-        width: (game_canvas_size.width.float * 2) + 800,
+        width: (game_canvas_size.width.float * 2) + 500,
         height: game_canvas_size.height.float * 2,
       )
     else:
@@ -275,6 +275,17 @@ proc main(fps: int): Result[void, string] {.raises: [].} =
         rl.White,
       )
       rl.draw_rectangle(0, 0, 90, 20, rl.Black)
+
+      ## Draw controls on top
+      when defined(mobileUI):
+        ## TODO: Hardcoded rectangle for jump button
+        rl.draw_rectangle(
+          rl.get_screen_width() - 250, rl.get_screen_height() - 500, 250, 250, rl.Green
+        )
+        ## TODO: Hardcoded rectangle for shoot button
+        rl.draw_rectangle(
+          rl.get_screen_width() - 250, rl.get_screen_height() - 250, 250, 250, rl.Red
+        )
       rl.draw_fps(0, 0)
   ## Done
   return ok()
