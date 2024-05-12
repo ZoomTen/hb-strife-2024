@@ -181,7 +181,7 @@ task apk, "Build an Android application":
     "--ks", keystoreFile,
     "--ks-pass", "pass:" & storePass,
     "--key-pass", "pass:" & keyPass,
-    "--out", "android/" & apkName & ".apk",
+    "--out", apkName & ".apk",
     "--ks-key-alias", keyAlias,
-    apkName & ".aligned.apk"
+    "android/" & apkName & ".aligned.apk"
   ].join(" "))
