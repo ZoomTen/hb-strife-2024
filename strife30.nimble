@@ -89,6 +89,7 @@ task apk, "Build an Android application":
     selfExec([
       "c",
       "-d:android",
+      "-d:mobileUI",
       "-d:release",
       "-d:AndroidAPI=" & $apiVersion,
       "--cpu:" & target.cpu,
