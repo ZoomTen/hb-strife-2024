@@ -1,0 +1,6 @@
+*.dex
+*.so
+*.class
+*.apk
+*.apk.idsig
+R.java
