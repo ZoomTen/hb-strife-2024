@@ -41,7 +41,7 @@ proc main(fps: int): Result[void, string] {.raises: [].} =
 
   randomize()
 
-  when not defined(emscripten):
+  when not defined(emscripten) and not defined(android):
     rl.set_trace_log_callback(my_log)
 
   ## Initialize the OS window
