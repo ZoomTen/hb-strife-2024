@@ -21,6 +21,11 @@ const
         width: game_canvas_size.width.float * 1,
         height: game_canvas_size.height.float * 1,
       )
+    elif defined(mobileUI):
+      (
+        width: (game_canvas_size.width.float * 2) + 800,
+        height: game_canvas_size.height.float * 2,
+      )
     else:
       (
         width: game_canvas_size.width.float * 2,
@@ -246,6 +251,9 @@ proc main(fps: int): Result[void, string] {.raises: [].} =
 
     ## Draw scaled canvas to the main screen
     rl.drawing:
+      let prop_game_width =
+        game_canvas_size.width.float *
+        (rl.get_screen_height().float / game_canvas_size.height.float)
       gsr.delta = rl.get_frame_time()
       rl.clear_background(rl.Black)
       rl.draw_texture(
@@ -257,9 +265,9 @@ proc main(fps: int): Result[void, string] {.raises: [].} =
           height: -gsr.canvas.texture.height.float,
         ),
         rl.Rectangle(
-          x: 0.0,
+          x: (rl.get_screen_width().float - prop_game_width) / 2,
           y: 0.0,
-          width: rl.get_screen_width().float,
+          width: prop_game_width,
           height: rl.get_screen_height().float,
         ),
         rl.Vector2(x: 0.0, y: 0.0),
