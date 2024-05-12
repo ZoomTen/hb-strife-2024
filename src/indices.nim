@@ -17,3 +17,9 @@ type
     DonutGuyDead
     HariaDead
     HariaAttack
+
+  ControlIndex* = enum
+    MovePlayerLeft = 0
+    MovePlayerRight
+    PlayerJump
+    PlayerShoot
